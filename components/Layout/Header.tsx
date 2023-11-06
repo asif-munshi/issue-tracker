@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { AiFillBug } from 'react-icons/ai'
+import classNames from 'classnames'
 
 export default function Header() {
   const links = [
@@ -25,11 +26,12 @@ export default function Header() {
           <Link
             key={link.label}
             href={link.href}
-            className={`${
-              link.href === pathname
-                ? 'bg-zinc-100 text-zinc-800 hover:bg-zinc-100'
-                : ''
-            } flex h-full items-center px-2 text-zinc-500 transition-colors hover:bg-zinc-50 hover:text-zinc-800`}
+            className={classNames({
+              'bg-zinc-100 text-zinc-800 hover:bg-zinc-100':
+                link.href === pathname,
+              'flex h-full items-center px-2 text-zinc-500 transition-colors hover:bg-zinc-50 hover:text-zinc-800':
+                true,
+            })}
           >
             {link.label}
           </Link>
