@@ -1,11 +1,16 @@
 import '@radix-ui/themes/styles.css'
+import '@/styles/theme-config.css'
 import '@/styles/globals.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import { Theme } from '@radix-ui/themes'
 import Header from '@/components/Layout/Header'
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-inter',
+})
 
 export const metadata: Metadata = {
   title: 'Issue Tracker',
@@ -19,8 +24,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        <Theme>
+      <body className={inter.variable}>
+        <Theme appearance="light" accentColor="indigo">
           <Header />
           <main>{children}</main>
         </Theme>
