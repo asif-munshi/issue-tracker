@@ -8,7 +8,7 @@ import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
-import { z } from 'zod'
+import { date, z } from 'zod'
 import { createIssueSchema } from '@/lib/validationSchemas'
 import ErrorMessage from '@/components/ErrorMessage/ErrorMessage'
 import Spinner from '@/components/Loader/Spinner'
@@ -28,6 +28,17 @@ export default function NewIssuePage() {
   const [error, setError] = useState('')
   const [isSubmitting, setSubmitting] = useState(false)
 
+  const onSubmit = handleSubmit(async (data) => {
+    try {
+      setSubmitting(true)
+      await axios.post('/api/issues', data)
+      router.push('/issues')
+    } catch (error) {
+      setSubmitting(false)
+      setError('An unexpected error occured.')
+    }
+  })
+
   return (
     <div className="flex w-full justify-center">
       <div className="w-[576px]">
@@ -36,19 +47,7 @@ export default function NewIssuePage() {
             <Callout.Text>{error}</Callout.Text>
           </Callout.Root>
         )}
-        <form
-          className="flex w-full justify-center"
-          onSubmit={handleSubmit(async (data) => {
-            try {
-              setSubmitting(true)
-              await axios.post('/api/issues', data)
-              router.push('/issues')
-            } catch (error) {
-              setSubmitting(false)
-              setError('An unexpected error occured.')
-            }
-          })}
-        >
+        <form className="flex w-full justify-center" onSubmit={onSubmit}>
           <div className="flex w-full flex-col gap-5">
             <TextField.Root>
               <TextField.Input placeholder="Title" {...register('title')} />
