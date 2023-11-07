@@ -11,6 +11,7 @@ import { useState } from 'react'
 import { z } from 'zod'
 import { createIssueSchema } from '@/lib/validationSchemas'
 import ErrorMessage from '@/components/ErrorMessage/ErrorMessage'
+import Spinner from '@/components/Loader/Spinner'
 
 type IssueForm = z.infer<typeof createIssueSchema>
 
@@ -25,6 +26,7 @@ export default function NewIssuePage() {
     resolver: zodResolver(createIssueSchema),
   })
   const [error, setError] = useState('')
+  const [isSubmitting, setSubmitting] = useState(false)
 
   return (
     <div className="flex w-full justify-center">
@@ -38,9 +40,11 @@ export default function NewIssuePage() {
           className="flex w-full justify-center"
           onSubmit={handleSubmit(async (data) => {
             try {
+              setSubmitting(true)
               await axios.post('/api/issues', data)
               router.push('/issues')
             } catch (error) {
+              setSubmitting(false)
               setError('An unexpected error occured.')
             }
           })}
@@ -58,7 +62,9 @@ export default function NewIssuePage() {
               )}
             />
             <ErrorMessage>{errors.description?.message}</ErrorMessage>
-            <Button className="hover:cursor-pointer">Add Issue</Button>
+            <Button className="hover:cursor-pointer" disabled={isSubmitting}>
+              Add Issue {isSubmitting && <Spinner />}
+            </Button>
           </div>
         </form>
       </div>
